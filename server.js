@@ -14,6 +14,8 @@ const favicon = require('serve-favicon')
 const path = require('path')
 require('dotenv').config()
 require('./config/database')
+const ensureLoggedIn = require('./config/ensureLoggedIn')
+
 
 const app = express()
 const PORT = process.env.PORT || 3001;
@@ -40,3 +42,8 @@ app.get('/*', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`);
 })
+
+
+// Protect the API routes below from anonymous users
+app.use('/api/items', ensureLoggedIn, require('./routes/api/items'));
+app.use('/api/orders', ensureLoggedIn, require('./routes/api/orders'));
